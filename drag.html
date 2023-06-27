@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://pixijs.download/release/pixi.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+        }
+    </style>
+  </head>
+  <body>
+    <script>
+        const texts = `
+            赵钱孙李周吴郑王
+            冯陈褚卫蒋沈韩杨
+            朱秦尤许何吕施张
+            孔曹严华金魏陶姜
+            戚谢邹喻柏水窦章
+            云苏潘葛奚范彭郎
+            鲁韦昌马苗凤花方
+            俞任袁柳酆鲍史唐
+            费廉岑薛雷贺倪汤
+            滕殷罗毕郝邬安常
+            乐于时傅皮卞齐康
+            伍余元卜顾孟平黄
+            和穆萧尹姚邵湛汪
+            祁毛禹狄米贝明臧
+            计伏成戴谈宋茅庞
+            熊纪舒屈项祝董梁
+            杜阮蓝闵席季麻强
+            贾路娄危江童颜郭
+            梅盛林刁钟徐邱骆
+            高夏蔡田樊胡凌霍
+            虞万支柯昝管卢莫
+            经房裘缪干解应宗
+            丁宣贲邓郁单杭洪
+            包诸左石崔吉钮龚
+            程嵇邢滑裴陆荣翁
+            荀羊於惠甄曲家封
+            芮羿储靳汲邴糜松
+            井段富巫乌焦巴弓
+            牧隗山谷车侯宓蓬
+            全郗班仰秋仲伊宫
+            宁仇栾暴甘钭厉戎
+            祖武符刘景詹束龙
+            叶幸司韶郜黎蓟薄
+            印宿白怀蒲邰从鄂
+            索咸籍赖卓蔺屠蒙
+            池乔阴鬱胥能苍双
+            闻莘党翟谭贡劳逄
+            姬申扶堵冉宰郦雍
+            郤璩桑桂濮牛寿通
+            边扈燕冀郏浦尚农
+            温别庄晏柴瞿阎充
+            慕连茹习宦艾鱼容
+            向古易慎戈廖庾终
+            暨居衡步都耿满弘
+            匡国文寇广禄阙东
+            欧殳沃利蔚越夔隆
+            师巩厍聂晁勾敖融
+            冷訾辛阚那简饶空
+            曾毋沙乜养鞠须丰
+            巢关蒯相查后荆红
+            游竺权逯盖益桓公
+            万俟司马上官欧阳
+            夏侯诸葛闻人东方
+            赫连皇甫尉迟公羊
+            澹台公冶宗政濮阳
+            淳于单于太叔申屠
+            公孙仲孙轩辕令狐
+            钟离宇文长孙慕容
+            鲜于闾丘司徒司空
+            丌官司寇仉督子车
+            颛孙端木巫马公西
+            漆雕乐正壤驷公良
+            拓跋夹谷宰父谷梁
+            晋楚闫法汝鄢涂钦
+            段干百里东郭南门
+            呼延归海羊舌微生
+            岳帅缑亢况郈有琴
+            梁丘左丘东门西门
+            商牟佘佴伯赏南宫
+            墨哈谯笪年爱阳佟
+            第五言福百家姓终
+        `
+        const textArr = texts.replace(/\s/g, '').split('')
+        const length = textArr.length
+
+        const app = new PIXI.Application({ background: '#1099bb', resizeTo: window });
+        document.body.appendChild(app.view);
+
+        const texture = PIXI.Texture.from('./img/bunny.png');
+        const container1 = new PIXI.Container();
+        const container2 = new PIXI.Container();
+        const container3 = new PIXI.Container();
+        container1.position.set(0, 20)
+        container2.position.set(0, 320)
+        container3.position.set(0, 620)
+        app.stage.addChild(container1);
+        app.stage.addChild(container2);
+        app.stage.addChild(container3);
+        
+
+        const style = new PIXI.TextStyle({
+            fontFamily: 'Arial',
+            fontSize: 16,
+            fontStyle: 'italic',
+            fontWeight: 'bold',
+            fill: ['#ffffff', '#00ff99'], // gradient
+            stroke: '#4a1850',
+            strokeThickness: 5,
+            dropShadow: true,
+            dropShadowColor: '#000000',
+            dropShadowBlur: 4,
+            dropShadowAngle: Math.PI / 6,
+            dropShadowDistance: 6,
+            wordWrap: true,
+            wordWrapWidth: 440,
+            lineJoin: 'round',
+        });
+        const skewStyle = new PIXI.TextStyle({
+            fontFamily: 'Arial',
+            dropShadow: true,
+            dropShadowAlpha: 0.8,
+            dropShadowAngle: 2.1,
+            dropShadowBlur: 4,
+            dropShadowColor: '0x111111',
+            dropShadowDistance: 10,
+            fill: ['#ffffff'],
+            stroke: '#004620',
+            fontSize: 18,
+            fontWeight: 'lighter',
+            lineJoin: 'round',
+            strokeThickness: 12,
+        });
+
+        renderTextArr({}, container1)
+        renderBtn(120, onClick1)
+
+        renderTextArr(style, container2)
+        renderBtn(420, onClick2)
+
+        renderTextArr(skewStyle, container3)
+        renderBtn(720, onClick3)
+
+
+        function renderTextArr(style, container) {//生成文字
+            container.removeChildren ()
+            let textString = ''
+            for (let i = 0; i < 100; i++) {
+                if (i%50==0) {
+                    textString += '\r\n'
+                }
+                const random = Math.floor(Math.random()*length)
+                textString += textArr[random]
+            }
+            console.log(textString)
+            const basicText = new PIXI.Text(textString, style)
+            container.addChild(basicText)
+        }
+
+        function renderBtn(y, onClick) {//渲染按钮
+            const textBtn = new PIXI.Sprite(texture);
+            textBtn.x = app.screen.width / 3
+            textBtn.y = y
+            textBtn.interactive = true;
+            textBtn.cursor = 'pointer'
+            app.stage.addChild(textBtn)
+            textBtn.on('pointerdown', onClick);
+        }
+        
+        function onClick1() {
+            console.log('refresh1')
+            renderTextArr({}, container1)
+        }
+        function onClick2() {
+            console.log('refresh2')
+            renderTextArr(style, container2)
+        }
+        function onClick3() {
+            console.log('refresh3')
+            renderTextArr(skewStyle, container3)
+        }
+
+        let direction1 = 'bottom', direction2 = 'bottom', direction3 = 'bottom'
+        app.ticker.add(() => {
+            if (direction1 == 'bottom') {
+                container1.y++
+                if (container1.y>=220) {
+                    direction1 = 'top'
+                }
+            } else if (direction1 == 'top') {
+                container1.y--
+                if (container1.y<=20) {
+                    direction1 = 'bottom'
+                }
+            }
+
+            if (direction2 == 'bottom') {
+                container2.y++
+                if (container2.y>=520) {
+                    direction2 = 'top'
+                }
+            } else if (direction2 == 'top') {
+                container2.y--
+                if (container2.y<=320) {
+                    direction2 = 'bottom'
+                }
+            }
+
+            if (direction3 == 'bottom') {
+                container3.y++
+                if (container3.y>=820) {
+                    direction3 = 'top'
+                }
+            } else if (direction3 == 'top') {
+                container3.y--
+                if (container3.y<=620) {
+                    direction3 = 'bottom'
+                }
+            }
+        });
+    </script>
+  </body>
+</html>

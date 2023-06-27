@@ -89,137 +89,101 @@
         const app = new PIXI.Application({ background: '#1099bb', resizeTo: window });
         document.body.appendChild(app.view);
 
-        const texture = PIXI.Texture.from('./img/bunny.png');
-        const container1 = new PIXI.Container();
-        const container2 = new PIXI.Container();
-        const container3 = new PIXI.Container();
-        container1.position.set(0, 20)
-        container2.position.set(0, 320)
-        container3.position.set(0, 620)
-        app.stage.addChild(container1);
-        app.stage.addChild(container2);
-        app.stage.addChild(container3);
-        
+        const container = new PIXI.Container();
+        app.stage.addChild(container);
 
         const style = new PIXI.TextStyle({
             fontFamily: 'Arial',
-            fontSize: 16,
-            fontStyle: 'italic',
+            fontSize: 24,
             fontWeight: 'bold',
             fill: ['#ffffff', '#00ff99'], // gradient
             stroke: '#4a1850',
-            strokeThickness: 5,
-            dropShadow: true,
-            dropShadowColor: '#000000',
-            dropShadowBlur: 4,
-            dropShadowAngle: Math.PI / 6,
-            dropShadowDistance: 6,
-            wordWrap: true,
-            wordWrapWidth: 440,
-            lineJoin: 'round',
-        });
-        const skewStyle = new PIXI.TextStyle({
-            fontFamily: 'Arial',
-            dropShadow: true,
-            dropShadowAlpha: 0.8,
-            dropShadowAngle: 2.1,
-            dropShadowBlur: 4,
-            dropShadowColor: '0x111111',
-            dropShadowDistance: 10,
-            fill: ['#ffffff'],
-            stroke: '#004620',
-            fontSize: 18,
-            fontWeight: 'lighter',
-            lineJoin: 'round',
-            strokeThickness: 12,
+            strokeThickness: 5
         });
 
-        renderTextArr({}, container1)
-        renderBtn(120, onClick1)
+        // create a texture from an image path
+        const textureRefresh = PIXI.Sprite.from('./img/bunny.png');
+        textureRefresh.position.set(app.screen.width / 2, app.screen.height - 200)
+        textureRefresh.interactive = true;
+        textureRefresh.cursor = 'pointer'
+        textureRefresh.scale.set(3);
+        app.stage.addChild(textureRefresh)
+        textureRefresh.on('pointerdown', renderBunnys);
 
-        renderTextArr(style, container2)
-        renderBtn(420, onClick2)
+        renderBunnys()
 
-        renderTextArr(skewStyle, container3)
-        renderBtn(720, onClick3)
-
-
-        function renderTextArr(style, container) {//生成文字
-            container.removeChildren ()
-            let textString = ''
-            for (let i = 0; i < 100; i++) {
-                if (i%50==0) {
-                    textString += '\r\n'
-                }
+        function renderBunnys() {
+            console.log('重新生成')
+            container.removeChildren()
+            for (let i = 0; i < 50; i++) {
                 const random = Math.floor(Math.random()*length)
-                textString += textArr[random]
+                createBunny(
+                    Math.floor(Math.random() * app.screen.width),
+                    Math.floor(Math.random() * app.screen.height),
+                    textArr[random]
+                );
             }
-            console.log(textString)
-            const basicText = new PIXI.Text(textString, style)
-            container.addChild(basicText)
+        }
+        function createBunny(x, y, text) {
+            // create our little bunny friend..
+            const bunny = new PIXI.Text(text, style)
+
+            // enable the bunny to be interactive... this will allow it to respond to mouse and touch events
+            bunny.interactive = true;
+
+            // this button mode will mean the hand cursor appears when you roll over the bunny with your mouse
+            bunny.cursor = 'pointer';
+
+            // center the bunny's anchor point
+            bunny.anchor.set(0.5);
+
+            // setup events for mouse + touch using
+            // the pointer events
+            bunny.on('pointerdown', onDragStart, bunny);
+
+            // move the sprite to its designated position
+            bunny.x = x;
+            bunny.y = y;
+
+            // add it to the stage
+            container.addChild(bunny)
         }
 
-        function renderBtn(y, onClick) {//渲染按钮
-            const textBtn = new PIXI.Sprite(texture);
-            textBtn.x = app.screen.width / 3
-            textBtn.y = y
-            textBtn.interactive = true;
-            textBtn.cursor = 'pointer'
-            app.stage.addChild(textBtn)
-            textBtn.on('pointerdown', onClick);
-        }
-        
-        function onClick1() {
-            console.log('refresh1')
-            renderTextArr({}, container1)
-        }
-        function onClick2() {
-            console.log('refresh2')
-            renderTextArr(style, container2)
-        }
-        function onClick3() {
-            console.log('refresh3')
-            renderTextArr(skewStyle, container3)
+        let dragTarget = null;
+
+        app.stage.interactive = true;
+        app.stage.hitArea = app.screen;
+        app.stage.on('pointerup', onDragEnd);
+        app.stage.on('pointerupoutside', onDragEnd);
+
+        function onDragMove(event)
+        {
+            if (dragTarget)
+            {
+                dragTarget.parent.toLocal(event.global, null, dragTarget.position);
+            }
         }
 
-        let direction1 = 'bottom', direction2 = 'bottom', direction3 = 'bottom'
-        app.ticker.add(() => {
-            if (direction1 == 'bottom') {
-                container1.y++
-                if (container1.y>=220) {
-                    direction1 = 'top'
-                }
-            } else if (direction1 == 'top') {
-                container1.y--
-                if (container1.y<=20) {
-                    direction1 = 'bottom'
-                }
-            }
+        function onDragStart()
+        {
+            // store a reference to the data
+            // the reason for this is because of multitouch
+            // we want to track the movement of this particular touch
+            // this.data = event.data;
+            this.alpha = 0.5;
+            dragTarget = this;
+            app.stage.on('pointermove', onDragMove);
+        }
 
-            if (direction2 == 'bottom') {
-                container2.y++
-                if (container2.y>=520) {
-                    direction2 = 'top'
-                }
-            } else if (direction2 == 'top') {
-                container2.y--
-                if (container2.y<=320) {
-                    direction2 = 'bottom'
-                }
+        function onDragEnd()
+        {
+            if (dragTarget)
+            {
+                app.stage.off('pointermove', onDragMove);
+                dragTarget.alpha = 1;
+                dragTarget = null;
             }
-
-            if (direction3 == 'bottom') {
-                container3.y++
-                if (container3.y>=820) {
-                    direction3 = 'top'
-                }
-            } else if (direction3 == 'top') {
-                container3.y--
-                if (container3.y<=620) {
-                    direction3 = 'bottom'
-                }
-            }
-        });
+        }
     </script>
   </body>
 </html>
