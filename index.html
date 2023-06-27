@@ -93,6 +93,9 @@
         const container1 = new PIXI.Container();
         const container2 = new PIXI.Container();
         const container3 = new PIXI.Container();
+        container1.position.set(0, 20)
+        container2.position.set(0, 320)
+        container3.position.set(0, 620)
         app.stage.addChild(container1);
         app.stage.addChild(container2);
         app.stage.addChild(container3);
@@ -100,7 +103,7 @@
 
         const style = new PIXI.TextStyle({
             fontFamily: 'Arial',
-            fontSize: 14,
+            fontSize: 16,
             fontStyle: 'italic',
             fontWeight: 'bold',
             fill: ['#ffffff', '#00ff99'], // gradient
@@ -125,31 +128,35 @@
             dropShadowDistance: 10,
             fill: ['#ffffff'],
             stroke: '#004620',
-            fontSize: 13,
+            fontSize: 18,
             fontWeight: 'lighter',
             lineJoin: 'round',
             strokeThickness: 12,
         });
 
-        renderTextArr(25, 20, {}, container1)
+        renderTextArr({}, container1)
         renderBtn(120, onClick1)
 
-        renderTextArr(25, 320, style, container2)
+        renderTextArr(style, container2)
         renderBtn(420, onClick2)
 
-        renderTextArr(25, 620, skewStyle, container3)
+        renderTextArr(skewStyle, container3)
         renderBtn(720, onClick3)
 
 
-        function renderTextArr(xRatio, y, style, container) {//生成文字
+        function renderTextArr(style, container) {//生成文字
             container.removeChildren ()
-            for (let i = 0; i < 50; i++) {
+            let textString = ''
+            for (let i = 0; i < 100; i++) {
+                if (i%50==0) {
+                    textString += '\r\n'
+                }
                 const random = Math.floor(Math.random()*length)
-                const basicText = new PIXI.Text(textArr[random], style)
-                basicText.x = i * xRatio
-                basicText.y = y
-                container.addChild(basicText)
+                textString += textArr[random]
             }
+            console.log(textString)
+            const basicText = new PIXI.Text(textString, style)
+            container.addChild(basicText)
         }
 
         function renderBtn(y, onClick) {//渲染按钮
@@ -164,25 +171,53 @@
         
         function onClick1() {
             console.log('refresh1')
-            renderTextArr(25, 20, {}, container1)
+            renderTextArr({}, container1)
         }
         function onClick2() {
             console.log('refresh2')
-            renderTextArr(25, 320, style, container2)
+            renderTextArr(style, container2)
         }
         function onClick3() {
             console.log('refresh3')
-            renderTextArr(25, 620, skewStyle, container3)
+            renderTextArr(skewStyle, container3)
         }
 
-        let y1 = 120, y2 = 420, y3 = 720
+        let direction1 = 'bottom', direction2 = 'bottom', direction3 = 'bottom'
         app.ticker.add(() => {
-            if (y1>=220) {
-                y1--
-                container1.y--
-            } else if (y1<=20) {
-                y1++
+            if (direction1 == 'bottom') {
                 container1.y++
+                if (container1.y>=220) {
+                    direction1 = 'top'
+                }
+            } else if (direction1 == 'top') {
+                container1.y--
+                if (container1.y<=20) {
+                    direction1 = 'bottom'
+                }
+            }
+
+            if (direction2 == 'bottom') {
+                container2.y++
+                if (container2.y>=520) {
+                    direction2 = 'top'
+                }
+            } else if (direction2 == 'top') {
+                container2.y--
+                if (container2.y<=320) {
+                    direction2 = 'bottom'
+                }
+            }
+
+            if (direction3 == 'bottom') {
+                container3.y++
+                if (container3.y>=820) {
+                    direction3 = 'top'
+                }
+            } else if (direction3 == 'top') {
+                container3.y--
+                if (container3.y<=620) {
+                    direction3 = 'bottom'
+                }
             }
         });
     </script>
