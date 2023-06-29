@@ -8,6 +8,7 @@
       <router-link to="/">首页</router-link>
       <router-link to="/text-drag">文字拖曳</router-link>
       <router-link to="/img-drag">图片拖曳</router-link>
+      <router-link to="/svg-control">svg图片控制</router-link>
     </div>
     <div class="content">
       <router-view></router-view>
@@ -16,6 +17,9 @@
 </template>
 
 <style lang="scss">
+  * {
+    box-sizing: border-box;
+  }
   body {
       margin: 0;
   }

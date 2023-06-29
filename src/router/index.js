@@ -10,6 +10,11 @@ const router = createRouter({
       component: HomeView
     },
     {
+      path: '/text-move',
+      name: 'textMove',
+      component: () => import('../views/text-move.vue')
+    },
+    {
       path: '/text-drag',
       name: 'textDrag',
       // route level code-splitting
@@ -20,10 +25,12 @@ const router = createRouter({
     {
       path: '/img-drag',
       name: 'imgDrag',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/img-drag.vue')
+    },
+    {
+      path: '/svg-control',
+      name: 'svgControl',
+      component: () => import('../views/svg-control.vue')
     }
   ]
 })
