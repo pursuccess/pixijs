@@ -6,9 +6,13 @@
   <div class="main-container">
     <div class="head-router">
       <router-link to="/">首页</router-link>
+      <!-- <router-link to="/text-move">文字自动移动</router-link>
       <router-link to="/text-drag">文字拖曳</router-link>
-      <router-link to="/img-drag">图片拖曳</router-link>
-      <router-link to="/svg-control">svg图片控制</router-link>
+      <router-link to="/img-drag">图片拖曳</router-link> -->
+      <router-link to="/svg-control">svg.js实现图片控制</router-link>
+      <router-link to="/svg-drag">svg图片拖拽改变transform</router-link>
+      <router-link to="/canvas-render-svg">canvas画布绘制svg图形</router-link>
+      <router-link to="/canvas-drag-svg">canvas画布上拖拽改变svg图形</router-link>
     </div>
     <div class="content">
       <router-view></router-view>

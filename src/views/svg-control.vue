@@ -8,8 +8,7 @@
 <script setup>
 import { SVG } from '@svgdotjs/svg.js'
 import { onMounted, ref } from 'vue'
-import { svgText, svg3text } from '@/utils/svg.js'
-import image1 from '@/assets/images/logo.svg'
+import { svg3text } from '@/utils/svg.js'
 
 const inputText = ref('Dragon----- - - - ->')
 
@@ -28,17 +27,14 @@ onMounted(() => {
 
   var textPath = text.path('M10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80')
 
-  // textPath.animate(1000).ease('<>')
-  //   .plot('M10 80 C 40 150, 65 150, 95 80 S 150 10, 180 80')
-    // .loop(true, true)
+  textPath.animate(1000).ease('<>')
+    .plot('M10 80 C 40 150, 65 150, 95 80 S 150 10, 180 80')
+    .loop(true, true)
 
   input.addEventListener('keyup', updateText(textPath))
 
-  const image = draw.image(image1)
-  image.size(100, 100)
-
   // 创建一个 SVG.js 画布
-const canvas = SVG().addTo('body');
+const canvas = SVG().addTo(document.getElementById('drawing'));
 
 // 加载 SVG 文件并解析
 const svgElement = SVG(svg3text);

@@ -31,6 +31,21 @@ const router = createRouter({
       path: '/svg-control',
       name: 'svgControl',
       component: () => import('../views/svg-control.vue')
+    },
+    {
+      path: '/svg-drag',
+      name: 'svgDrag',
+      component: () => import('../views/svg-drag.vue')
+    },
+    {
+      path: '/canvas-render-svg',
+      name: 'canvasRenderSvg',
+      component: () => import('../views/canvas-render-svg.vue')
+    },
+    {
+      path: '/canvas-drag-svg',
+      name: 'canvasDragSvg',
+      component: () => import('../views/canvas-drag-svg.vue')
     }
   ]
 })
