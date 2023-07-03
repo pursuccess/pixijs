@@ -12,7 +12,8 @@
   import bunnyImg5 from '@/assets/images/1.svg'
   import bunnyImg6 from '@/assets/images/2.svg'
   import bunnyImg7 from '@/assets/images/3.svg'
-  import bunnyImg8 from '@/assets/images/4.svg'
+//   import bunnyImg8 from '@/assets/images/4.svg'
+  import { svg4text as  bunnyImg8} from '@/utils/svg.js'
   
   const app = new PIXI.Application({ background: '#1099bb', resizeTo: window });
 

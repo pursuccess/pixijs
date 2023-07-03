@@ -6,9 +6,9 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { svg1, svg3text, svgLogo } from '@/utils/svg.js'
-const svgText = ref(svg3text)
-const svgPosition  = ref({ x: 0, y: 0})
+import { svg1, svg4text, svgLogo } from '@/utils/svg.js'
+const svgText = ref(svg4text)
+const svgPosition  = ref({ x: 0, y: 0 })
 const rectClient = { width: 50, height: 50 }
 const img = new Image()
 
@@ -32,6 +32,7 @@ const getSvgCurrentPosition = () => {//获取当前svg rect的坐标
 }
 
 onMounted(() => {
+  getSvgCurrentPosition()
   const container = document.getElementById('container')
   const drag = document.getElementById('drag')
   const canvas = document.createElement('canvas');
@@ -45,7 +46,7 @@ onMounted(() => {
   // 将 SVG 图像绘制到 Canvas 上
   img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgText.value);
   img.onload = function() {
-    console.log(img)
+    // console.log(img)
     ctx.reset();
     ctx.drawImage(img, 0, 0);
   }

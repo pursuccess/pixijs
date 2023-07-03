@@ -46,6 +46,11 @@ const router = createRouter({
       path: '/canvas-drag-svg',
       name: 'canvasDragSvg',
       component: () => import('../views/canvas-drag-svg.vue')
+    },
+    {
+      path: '/pixi-drag-svg',
+      name: 'pixiDragSvg',
+      component: () => import('../views/pixi-drag-svg.vue')
     }
   ]
 })

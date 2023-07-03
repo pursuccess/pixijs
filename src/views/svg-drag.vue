@@ -6,8 +6,8 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { svg1 } from '@/utils/svg.js'
-const svgText = ref(svg1)
+import { svg4text } from '@/utils/svg.js'
+const svgText = ref(svg4text)
 const svgPosition  = ref({ x: 0, y: 0})
 const rectClient = { width: 50, height: 50 }
 
@@ -33,6 +33,7 @@ onMounted(() => {
   // setInterval(() => { 
   //   changeSvg()
   // }, 3000)
+  getSvgCurrentPosition()
   let container = document.getElementById('container')
   let drag = document.getElementById('drag')
   drag.onmousedown = function (event) {
@@ -44,6 +45,7 @@ onMounted(() => {
       const rectHeight = rectClient.height
       console.log(clientX, clientY, currentLeft, currentTop)
       document.onmousemove = function (event) {
+        console.log(event)
           console.log(event.clientX, event.clientY, clientX, clientY)
           let left = event.clientX - clientX + currentLeft
           let top = event.clientY - clientY + currentTop
@@ -73,16 +75,16 @@ onMounted(() => {
 
 <style scoped lang="scss">
 #container {
-    width: 500px;
+    width: 1000px;
        /* overflow: hidden有效阻止鼠标超出拖动范围而触发mousemove回调 */
     overflow: hidden;
     position: relative;
-    height: 500px;
+    height: 800px;
     background-color: #ddd;
 }
 
 #drag {
-  // width: 200px;
-  // height: 200px;
+  // width: 400px;
+  // height: 400px;
 }
 </style>
