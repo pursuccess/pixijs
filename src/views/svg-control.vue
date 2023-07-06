@@ -1,53 +1,67 @@
 <template>
-  <div>
-    <input type="text" v-model="inputText" placeholder="Type text here...">
-    <div id="drawing"></div>
+  <div id="drawing">
+    <div v-html="svgText" id="svgElement"></div>
   </div>
 </template>
 
 <script setup>
-import { SVG } from '@svgdotjs/svg.js'
 import { onMounted, ref } from 'vue'
 import { svg3text } from '@/utils/svg.js'
 
-const inputText = ref('Dragon----- - - - ->')
+const svgText = ref(svg3text)
 
-function updateText(textPath) {
-	return function() {
-		textPath.tspan(this.value)
-	}				
+const changeSvg = (left, top) => {
+  const svg = svgText.value
+  const reg = /("translate\()(\d+)(,\s)(\d+)/
+  console.log(svg.match(reg))
+  if(svg.match(reg)) {
+    svgText.value = svg.replace(reg, `$1${left}$3${top}`)
+  }
 }
 
 onMounted(() => {
-  var input = document.querySelector('input[type=text]')
-  var draw = SVG().addTo('#drawing').viewbox(0, 0, 300, 140)
-  var text = draw.text(function(add) {
-    add.tspan( input.value )
-  })
+  const drawElement = document.getElementById('drawing');
+  const svgElement = document.getElementById('svgElement');
 
-  var textPath = text.path('M10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80')
+  svgElement.onmousedown = function(event) {
+    let clientX = parseInt(event.clientX)//鼠标事件的x坐标位置
+    let clientY = parseInt(event.clientY)//鼠标事件的y坐标位置
+    console.log(event)
 
-  textPath.animate(1000).ease('<>')
-    .plot('M10 80 C 40 150, 65 150, 95 80 S 150 10, 180 80')
-    .loop(true, true)
+    svgElement.onmousemove = function(event) {
+      // 获取鼠标在 SVG 元素中的位置
+      const left = event.clientX - clientX + svgElement.getBoundingClientRect().left;
+      const top = event.clientY - clientY + svgElement.getBoundingClientRect().top;
+      
+      // 在这里编写处理鼠标移动事件的代码
+      // 可以根据鼠标位置进行相应的操作，例如更新图形位置、改变样式等
+      if (left > drawElement.clientWidth)
+          left = drawElement.clientWidth
+      if (left < 0)
+          left = 0
+      if (top > drawElement.clientHeight)
+          top = drawElement.clientHeight
+      if (top < 0)
+          top = 0
+          console.log(left)
+      changeSvg(left, top)
+    };
 
-  input.addEventListener('keyup', updateText(textPath))
+    svgElement.onmouseup = function () {
+      svgElement.onmousemove = null
+    }
+  }
+  
 
-  // 创建一个 SVG.js 画布
-const canvas = SVG().addTo(document.getElementById('drawing'));
-
-// 加载 SVG 文件并解析
-const svgElement = SVG(svg3text);
-
-// 将解析后的 SVG 元素添加到画布中
-canvas.add(svgElement);
-
-// 获取 SVG 图片中的圆圈元素，并修改其颜色
-const circle = svgElement.findOne('path');
-circle.attr('fill', 'green');
 })
 </script>
 
 <style scoped lang="scss">
-
+  #drawing {
+    width: 1000px;
+    overflow: hidden;
+    position: relative;
+    height: 800px;
+    background-color: #ddd;
+}
 </style>
